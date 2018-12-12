@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="http://d3js.org/d3.v4.min.js"></script>
+    <script src="http://dimplejs.org/dist/dimple.v2.3.0.min.js"></script>
+    <script type="text/javascript">
+        function draw(data) {
+
+            "use strict";
+            data = data.filter(function(row) {
+                if(row.Category) {
+                    return row;
+                };
+            });
+            var margin = 75,
+                width = 1600 - 4*margin,
+                height = 600 - margin;
+            d3.select("body").append("center").append("h2").text("Time Magazine Person of the Year");
+            var svg = dimple.newSvg("body", width, height);            
+            var chart = new dimple.chart(svg, data);
+            var x = chart.addTimeAxis("x", "Year");
+            x.tickFormat = "%Y";
+            x.timeInterval = 10;
+            chart.addCategoryAxis("y", "Category");
+            chart.addSeries(null, dimple.plot.line);
+            var s = chart.addSeries(["Name", "Title", "Context", "Country"], dimple.plot.bubble);
+            chart.addLegend(1600 - 5*margin, 100 - margin, 100, 200, "right", s);
+            chart.draw();
+        };
+    </script>
+    <title>Time Magazine Person of the Year</title>
+</head>
+<body>
+    <script type="text/javascript">
+        d3.csv("archive.csv", draw);
+    </script>
+</body>
+</html>
